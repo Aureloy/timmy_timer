@@ -1,0 +1,23 @@
+<div class="login-form">
+	<img id="timmy_front" class="" src="img/timmy.gif" onclick="playSound()">
+	
+	<label for="login">Login:</label><br>
+	<input type="text" class="niceinput" id="login" placeholder="Entrez votre login...">
+	
+	<p class="right">
+		<a href="#" id="login-form-valid">Ok</a>
+	</p>
+	
+	
+</div>
+
+<audio id="timmay">
+   <source src="sound/timmay.mp3" type='audio/mpeg; codecs="mp3"'>
+</audio>
+
+<script>
+function playSound()
+{
+	document.getElementById('timmay').play();
+}
+</script>
