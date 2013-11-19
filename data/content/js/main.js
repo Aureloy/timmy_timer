@@ -160,6 +160,41 @@ var ajax = {
 			}
 		});
 	}
+	
+	,getCurrentWeek : function(day)
+	{
+		var myDate = new Date();
+		myDate.setTime(day);
+		
+		$.ajax({
+			url : url_ws + 'ajax/getCurrentWeek.php'
+			,data:'id=' + localStorage.id + '&day=' + myDate.getFullYear() + '-' + (parseInt(myDate.getMonth(),10)+1) + '-' +  myDate.getDate()
+			,dataType:'json'
+			,type:'POST'
+			,cache :false
+			,success: function(response)
+			{
+				if(response.result == undefined || response.result != 'ok')
+				{
+					alert('Une erreur est survenue : ' + (response.err != undefined ? response.err : 'CURWEEK#2' ))
+					return;
+				}
+				
+				if(response.data == undefined)
+				{
+					alert('Une erreur est survenue : ' + (response.err != undefined ? response.err : 'CURWEEK#3' ))
+					return;
+				}
+				
+				file.saveLocalCSV(response.data);
+				
+			}
+			,error: function(jqXHR, statusText)
+			{
+				alert('Une erreur est survenue. CURWEEK#1' + ' jqXHR=' + jqXHR.status +  ' jqXHR.statusText=' + jqXHR.statusText );
+			}
+		});
+	}
 }
 
 
@@ -604,11 +639,53 @@ function initDay(param)
 	
 	$('#menu_btn,#menucover').click(menu.handle);
 	
-	$('#export').click(function(){ alert('Soon !'); });
+	$('#export').click(function(){ ajax.getCurrentWeek(param.day); });
+	
 	$('#duree').click(function(){ alert('Soon !'); });
 	
 	$('#console').click(function(){ window.frame.openDevTools() });
 	$('#refresh').click(function(){ location.reload(); });
 	$('#disconnect').click(function(){ delete localStorage.name; location.reload(); });
 }
+
+
+var file = {
+	
+	/* Enregistre un fichier CSV en local à partir d'un array type : [["c1l1", "c2l1", "c3l1"], ["c1l2", "c2l2", "c3l2"]] */
+	saveLocalCSV : function(arr, initialName)
+	{
+		var csvContent = "\uFEFF";
+		
+		arr.forEach(function(infoArray, index)
+		{
+			dataString = infoArray.join(';');
+			csvContent += index < infoArray.length ? dataString+ "\n" : dataString;
+		});
+
+		window.frame.openDialog( { type:'save', multiSelect:false, title : 'Choisissez un nom de fichier CSV' ,acceptTypes: {'CSV':['*.csv','*.CSV']}, default:''} , function( err , files ) {
+			if (err) {
+			   console.error(err);
+			   return false;
+			}
+			if(files.length == 1)
+			{
+				for(var i=0;i<files.length;i++) 
+				{
+					var fs = require("fs")
+					  , errlog = fs.createWriteStream(files[i].replace("\\","/").replace('.csv','') + ".csv", { flags: 'w',  encoding: "utf8",  mode: 0777 });
+
+					process.__defineGetter__("stderr", function(){
+					  return errlog;
+					})
+
+					process.stderr.write(csvContent);
+					process.stderr.end();
+					
+					alert('Fichier enregistré ! ' + files[i].replace('.csv','') + ".csv");
+				}
+			}
+		});
+	}
+
+};
 
