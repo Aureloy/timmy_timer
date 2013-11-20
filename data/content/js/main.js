@@ -67,6 +67,8 @@ var ajax = {
 				}
 				
 				localStorage.id = response.id;
+				
+				notif.msg('Bienvenue, ' + localStorage.name + ' !');
 							
 				page.load('day', null, initDay, { day : new Date().getTime() });
 			}
@@ -123,7 +125,8 @@ var ajax = {
 					return;
 				}
 				
-				project.setAutocomplete(response.tasksNames);
+				project.setAutocompleteNew(response.tasksNames);
+				project.setAutocompleteMenu(response.tasksDurations);
 			}
 			,error: function(jqXHR, statusText)
 			{
@@ -286,6 +289,7 @@ var menu =
 	{
 		if($('#menu').width() > 0) menu.close();
 		else menu.open();
+		$('#project-duree').val('').hide();
 	},
 
 	open : function()
@@ -351,7 +355,7 @@ var project = {
 		}
 	}
 	
-	,setAutocomplete : function(data)
+	,setAutocompleteNew : function(data)
 	{
 		$( "#new-name" ).autocomplete({
 			source: function( request, response ) 
@@ -366,6 +370,42 @@ var project = {
 			,position: { my : "left bottom", at: "left top" }
 			,minLength: 0 
 			,autoFocus:true
+		});
+	}
+	
+	,setAutocompleteMenu : function(data)
+	{
+		$( "#project-duree" ).autocomplete({
+			source: function( request, response ) 
+			{
+				var matches = $.map( data, function(tag, index) {
+				  if ( index.toUpperCase().indexOf(request.term.toUpperCase()) === 0 ) {
+					return index;
+				  }
+				});
+				response(matches);
+			}
+			,position: { my : "left top", at: "left bottom" }
+			,minLength: 0 
+			,autoFocus:true
+			,select: function( event, ui )
+			{
+				duration = parseInt(data[ui.item.value],10);
+				/*check if present today and add the value*/
+				
+				$('#projectList li .projectName').each(function(){ 
+					if($(this).val() == ui.item.value)
+					{
+						duration += parseInt($(this).parent().attr('data-duration'),10);
+					}
+				});
+				
+				
+				hours =  ("00" +  Math.floor(duration/60/60)).slice(-2); 
+				minutes =  ("00" + Math.floor(duration/60%60)).slice(-2); 
+				
+				notif.msg('Dur&eacute;e totale : ' + hours + 'h' + minutes + 'mn');  
+			}
 		});
 	}
 	
@@ -641,7 +681,7 @@ function initDay(param)
 	
 	$('#export').click(function(){ ajax.getCurrentWeek(param.day); });
 	
-	$('#duree').click(function(){ alert('Soon !'); });
+	$('#duree_totale').click(function(){ $('#project-duree').show(150);	});
 	
 	$('#console').click(function(){ window.frame.openDevTools() });
 	$('#refresh').click(function(){ location.reload(); });
@@ -651,7 +691,7 @@ function initDay(param)
 
 var file = {
 	
-	/* Enregistre un fichier CSV en local à partir d'un array type : [["c1l1", "c2l1", "c3l1"], ["c1l2", "c2l2", "c3l2"]] */
+	/* Enregistre un fichier CSV en local Ã  partir d'un array type : [["c1l1", "c2l1", "c3l1"], ["c1l2", "c2l2", "c3l2"]] */
 	saveLocalCSV : function(arr, initialName)
 	{
 		var csvContent = "\uFEFF";
@@ -681,11 +721,26 @@ var file = {
 					process.stderr.write(csvContent);
 					process.stderr.end();
 					
-					alert('Fichier enregistré ! ' + files[i].replace('.csv','') + ".csv");
+					notif.msg('Fichier enregistr&eacute; ! ' + files[i].replace('.csv','') + ".csv");
 				}
 			}
 		});
 	}
 
 };
+
+notif_hider = false;
+
+notif = {
+
+	msg : function(text)
+	{
+		clearTimeout(notif_hider);
+		
+		$('#notif').stop(true).show('bounce', {}, 300);
+		$('#notif-text').html(text);
+		
+		notif_hider = setTimeout("$('#notif').hide('explode',{},400)",4000);
+	}
+}
 
