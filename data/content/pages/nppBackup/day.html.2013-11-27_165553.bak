@@ -41,12 +41,6 @@
 		<li>
 			<div class="hr"></div>
 		</li>
-		<li id="mange">
-			Ça mange où ?
-		</li>
-		<li>
-			<div class="hr"></div>
-		</li>
 		<li id="console">
 			Console développeur
 		</li>

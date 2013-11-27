@@ -685,19 +685,18 @@ function initDay(param)
 	
 	$('#mange').click(function(){
 		var food = [ 
-			'Au Mac murphy'
-			,'Au Mac murphy'
-			,'Au Mac murphy'
-			,'Au Broutteux'
-			,'Au Bouffon'
-			,'Chez Karl'
-			,'Chez Durik'
-			,'Fais tes courses &agrave; G&eacute;ant'
-			,'Chez Paul'
+			'Mac murphy'
+			,'Mac murphy'
+			,'Broutteux'
+			,'Bouffon'
+			,'Karl'
+			,'Durik'
+			,'G&eacute;ant'
+			,'Paul'
 			,'DTC'
 		];
 		
-		notif.msg(food[Math.floor(Math.random() * food.length)] + ' !');
+		notif.msg(food[Math.round(Math.random() * food.length)] + ' !');
 		
 	});
 	

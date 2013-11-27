@@ -689,11 +689,11 @@ function initDay(param)
 			,'Au Mac murphy'
 			,'Au Mac murphy'
 			,'Au Broutteux'
-			,'Au Bouffon'
-			,'Chez Karl'
-			,'Chez Durik'
-			,'Fais tes courses &agrave; G&eacute;ant'
-			,'Chez Paul'
+			,'A Bouffon'
+			,'A Karl'
+			,'A Durik'
+			,'A G&eacute;ant'
+			,'A Paul'
 			,'DTC'
 		];
 		

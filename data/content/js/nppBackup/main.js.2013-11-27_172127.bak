@@ -692,7 +692,7 @@ function initDay(param)
 			,'Au Bouffon'
 			,'Chez Karl'
 			,'Chez Durik'
-			,'Fais tes courses &agrave; G&eacute;ant'
+			,'Fais tes courses à G&eacute;ant'
 			,'Chez Paul'
 			,'DTC'
 		];

@@ -683,24 +683,6 @@ function initDay(param)
 	
 	$('#duree_totale').click(function(){ $('#project-duree').show(150);	});
 	
-	$('#mange').click(function(){
-		var food = [ 
-			'Au Mac murphy'
-			,'Au Mac murphy'
-			,'Au Mac murphy'
-			,'Au Broutteux'
-			,'Au Bouffon'
-			,'Chez Karl'
-			,'Chez Durik'
-			,'Fais tes courses &agrave; G&eacute;ant'
-			,'Chez Paul'
-			,'DTC'
-		];
-		
-		notif.msg(food[Math.floor(Math.random() * food.length)] + ' !');
-		
-	});
-	
 	$('#console').click(function(){ window.frame.openDevTools() });
 	$('#refresh').click(function(){ location.reload(); });
 	$('#disconnect').click(function(){ delete localStorage.name; location.reload(); });
